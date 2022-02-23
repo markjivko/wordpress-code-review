@@ -1,6 +1,12 @@
-# WordPress QA Static Site Generator
+# WordPress Code Review
 
-Generate Quality Assurance tests for WordPress plugins
+<p align="center">
+    <a href="">
+        <img src="https://repository-images.githubusercontent.com/462785554/e220a4a9-a4a6-4efc-aede-7e7b5a171a26"/>
+    </a>
+</p>
+
+Generate Quality Assurance tests for public WordPress plugins and store them as static HTML pages.
 
 ## Install procedure
 
