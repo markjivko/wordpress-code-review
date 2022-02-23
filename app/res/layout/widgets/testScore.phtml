@@ -1,0 +1,49 @@
+<div class="score">
+<?php foreach ($data as $grade):
+    $dataGrade = 'ok';
+    switch (true) {
+        case $grade[2] < 50:
+            $dataGrade = 'fail';
+            break;
+
+        case $grade[2] < 75:
+            $dataGrade = 'warn';
+            break;
+
+        case $grade[2] < 100:
+            $dataGrade = 'good';
+            break;
+    }
+    
+    // Prepare the weight
+    $dataWeight = '';
+    switch ($grade[5]) {
+        case Test_Score::WEIGHT_CRITICAL:
+            $dataWeight = '&#x1f53a; Critical ' . (1 === $grade[3] ? 'test' : 'tests') . ' (weight: ' . $grade[5] . ')';
+            break;
+        
+        case Test_Score::WEIGHT_IMPORTANT:
+            $dataWeight = '&#x1f538; ' . (1 === $grade[3] ? 'Test' : 'Tests') . ' weight: ' . $grade[5];
+            break;
+        
+        case Test_Score::WEIGHT_ELEVATED:
+            $dataWeight = '&#x1f539; ' . (1 === $grade[3] ? 'Test' : 'Tests') . ' weight: ' . $grade[5];
+            break;
+    }
+?>
+    <div data-grade="<?=$dataGrade;?>">
+        <h4>
+            <?=$grade[0]?>
+            <?php if ($grade[2] < 100):?>
+                <mark><?=round($grade[2], 0);?>% from <?=$grade[3];?> <?=(1 === $grade[3] ? 'test' : 'tests');?></mark>
+            <?php else:?>
+                <mark>Passed <?=$grade[3];?> <?=(1 === $grade[3] ? 'test' : 'tests');?></mark>
+            <?php endif;?>
+        </h4>
+        <span>
+            <q><?=(strlen($dataWeight) ? ('<b>' . $dataWeight . '</b> | ') : '')?><?=$grade[1]?></q>
+            <div class="info<?php echo ($grade[2] < 100 ? ' action' : '');?>"><?=$grade[4];?></div>
+        </span>
+    </div>
+<?php endforeach; ?>
+</div>

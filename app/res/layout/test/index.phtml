@@ -1,0 +1,237 @@
+<?php 
+    /**
+     * Get hue rotation
+     * 
+     * @param int $x Value between 0 and 100
+     * @return float Hue rotation in degrees between 0 and -130
+     */
+    $getHue = function($x) {
+        $step = 25;
+        return round(13 * (($step * round($x / $step)) - 100) / 9, 2);
+    };
+    
+    // Store page details
+    $pageTitle = Render_Helper::getTitle();
+    $pageDescription = Render_Helper::getDescription();
+    list($ratingValue, $ratingCount) = Render_Helper::getRating();
+    
+    // Store stats and changelog
+    $pluginStats = Tester::getData()[Tester::DATA_ACTIVE][Test_1_About::class][Test_1_About::DATA_PLUGIN_STATS];
+    $pluginCommits = Tester::getData()[Tester::DATA_ACTIVE][Test_1_About::class][Test_1_About::DATA_PLUGIN_COMMITS];
+    
+    // Store archive size
+    $archiveSize = '';
+    if (Cache_Data::get($pluginSlug)->getArchiveSize() > 0) {
+        switch (true) {
+            case (Cache_Data::get($pluginSlug)->getArchiveSize() >= 1024 * 1024):
+                $archiveSize = number_format(Cache_Data::get($pluginSlug)->getArchiveSize() / 1024 / 1024, 2) . ' MB';
+                break;
+            
+            case (Cache_Data::get($pluginSlug)->getArchiveSize() >= 1024):
+                $archiveSize = number_format(Cache_Data::get($pluginSlug)->getArchiveSize() / 1024, 2) . ' KB';
+                break;
+            
+            default:
+                $archiveSize = number_format(Cache_Data::get($pluginSlug)->getArchiveSize(), 0) . ' B';
+                break;
+        }
+    }
+?><!doctype html>
+<html data-page="plugin" lang="en" dir="ltr">
+    <head>
+        <meta charset="UTF-8"/>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+        <title><?=$pageTitle?></title>
+        <?php if (strlen(Config::get()->googleAnalytics())):?><script async src="https://www.googletagmanager.com/gtag/js?id=<?=Config::get()->googleAnalytics()?>"></script><?php endif;?>
+        
+        <script>
+            ((path, host) => {
+                do {
+                    if ('potrivit.gitlab.io' === host) {
+                        window.location.href = `https://<?=Config::get()->domainLive()?>/${path.replace(/(?:^\/potrivit\/|\bindex.html$)/ig,'')}`;
+                        break;
+                    } else {
+                        if ('www.<?=Config::get()->domainLive()?>' === host || path.match(/\/index.html$/ig)) {
+                            window.location.href = `https://<?=Config::get()->domainLive()?>${path.replace(/\bindex.html$/ig,'')}`;
+                            break;
+                        }
+                    }
+                } while(false);
+            })(window.location.pathname, window.location.hostname);
+            <?php if (strlen(Config::get()->googleAnalytics())):?>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', '<?=Config::get()->googleAnalytics()?>');<?php endif;?>
+        </script>
+        <script type="application/ld+json"><?=Render_Helper::getLdJson()?></script>
+        <script defer src="../../<?=Render_Listing::FOLDER_MAIN?>/js/main.js"></script>
+
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />        
+        <link rel="stylesheet" href="../../<?=Render_Listing::FOLDER_MAIN?>/css/main.css"/>
+        <link rel="dns-prefetch" href="//ps.w.org"/>
+        <link rel="manifest" id="pwa_manifest"/>
+        <link rel="canonical" href="https://<?=Config::get()->domainLive()?>/<?=Render_Listing::FOLDER_PLUGIN?>/<?=$pluginSlug?>/"/>
+        <link rel="shortcut icon" type="image/ico" href="../../favicon.ico"/>
+        <link rel="apple-touch-icon" href="../../<?=Render_Listing::FOLDER_MAIN?>/img/512.png"/>
+        <link rel="license" href="<?=Config::get()->licenseUri()?>"/>
+        
+        <meta name="generator" content="<?=Config::get()->siteName();?> SSG v.<?=Config::get()->version()?> | markjivko.com"/>
+        <meta name="author" content="markjivko.com"/>
+        <meta name="referrer" content="origin"/>
+        <meta name="referrer" content="origin-when-crossorigin"/>
+        <meta name="referrer" content="origin-when-cross-origin"/>
+        <meta name="description" content="<?=$pageDescription?>"/>
+        <meta name="theme-color" content="#13d213"/>
+        <meta name="msapplication-TileColor" content="#13d213"/>
+        <meta name="apple-mobile-web-app-capable" content="yes"/>
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width"/>
+        <meta property="og:title" content="<?=$pageTitle?>"/>
+        <meta property="og:url" content="https://<?=Config::get()->domainLive()?>/<?=Render_Listing::FOLDER_PLUGIN?>/<?=$pluginSlug?>/"/>
+        <meta property="og:site_name" content="<?=Config::get()->siteName();?>"/>
+        <meta property="og:description" content="<?=$pageDescription?>"/>
+        <meta property="og:type" content="website"/>
+        <meta property="og:image" content="<?=Render_Helper::getIconUrl()?>"/>
+    </head>
+    <body>
+        <header>
+            <div class="container">
+                <div class="col part-top">
+                    <a class="icon" href="https://<?= Config::get()->domainLive()?>/"<?php if ($ratingValue < 100):?> style="filter:hue-rotate(<?=$getHue($ratingValue)?>deg)"<?php endif;?>>
+                        <?=$ratingValue;?>% <span><?=$pluginSlug?></span>
+                    </a>
+                    <h1>Code Review | <?=Tester::getData()[Tester::DATA_ACTIVE][Test_1_About::class][Test_1_About::DATA_PLUGIN_NAME]?></h1>
+                    <div data-role="search"></div>
+                </div>
+            </div>
+        </header>
+        <div class="info">
+            <div class="container">
+                <div data-role="score">
+                    <span>
+                        WordPress plugin <?=Tester::getData()[Tester::DATA_ACTIVE][Test_1_About::class][Test_1_About::DATA_PLUGIN_NAME]?> scored 
+                        <b style="width:<?=(100 - $ratingValue)?>%"><i><?=$ratingValue;?>%</i></b> 
+                        from <?=$ratingCount?> tests.
+                    </span>
+                </div>
+                <div class="col col-sm-6">
+                    <h2>About plugin</h2>
+                    <ul class="about">
+                        <li>Plugin page: <b><a href="https://wordpress.org/plugins/<?=$pluginSlug?>" rel="noreferrer nofollow" target="_blank"><?=(strlen($pluginSlug) > 20 ? (substr($pluginSlug, 0, 17) . '...') : $pluginSlug)?></a></b></li>
+                        <li>Plugin version: <b><?=Tester::getData()[Tester::DATA_ACTIVE][Test_1_About::class][Test_1_About::DATA_PLUGIN_VERSION]?></b></li>
+                        <?php if (isset(Tester::getData()[Tester::DATA_ACTIVE][Test_1_About::class][Test_1_About::DATA_PLUGIN_REQ_PHP])):?>
+                            <li>PHP compatiblity: <b><?=Tester::getData()[Tester::DATA_ACTIVE][Test_1_About::class][Test_1_About::DATA_PLUGIN_REQ_PHP]?>+</b></li>
+                        <?php endif;?>
+                        <li>PHP version: <b><?=PHP_VERSION?></b></li>
+                        <?php if (isset(Tester::getData()[Tester::DATA_ACTIVE][Test_1_About::class][Test_1_About::DATA_PLUGIN_REQ])):?>
+                            <li>WordPress compatibility: <b><?php
+                                    echo (
+                                        Tester::getData()[Tester::DATA_ACTIVE][Test_1_About::class][Test_1_About::DATA_PLUGIN_REQ]
+                                        . (
+                                            isset(Tester::getData()[Tester::DATA_ACTIVE][Test_1_About::class][Test_1_About::DATA_PLUGIN_TESTED])
+                                                ? ('-' . Tester::getData()[Tester::DATA_ACTIVE][Test_1_About::class][Test_1_About::DATA_PLUGIN_TESTED])
+                                                : '+'
+                                        )
+                                    );
+                                ?></b>
+                            </li>
+                        <?php endif;?>
+                        <li>WordPress version: <b><?=Run_Plugin::getWpVersion()?></b></li>
+                        <?php if (null !== $pluginStats[Cache_Fetch::DATE_FIRST]):?>
+                            <li>First release: <b><?=date('M j, Y', $pluginStats[Cache_Fetch::DATE_FIRST]);?></b></li>
+                        <?php endif;?>
+                        <?php if (null !== $pluginStats[Cache_Fetch::DATE_LAST]):?>
+                            <li>Latest release: <b><?=date('M j, Y', $pluginStats[Cache_Fetch::DATE_LAST]);?></b></li>
+                        <?php endif;?>
+                        <li>Number of updates: <b><?=number_format($pluginCommits[Cache_Fetch::COMMIT_COUNT]);?></b></li>
+                        <li>Update frequency: <b><?=(
+                            $pluginCommits[Cache_Fetch::COMMIT_FREQUENCY] > 0
+                                ? ('every ' . number_format($pluginCommits[Cache_Fetch::COMMIT_FREQUENCY], 1) . ' days')
+                                : 'N/A'
+                            )?></b></li>
+                        <?php if (count($pluginCommits[Cache_Fetch::COMMIT_AUTHORS])):?>
+                            <li>Top authors: <b class="authors">
+                                <?php foreach ($pluginCommits[Cache_Fetch::COMMIT_AUTHORS] as $authorName => $authorPercent):?>
+                                    <span>
+                                        <a target="_blank" rel="noreferrer nofollow" href="https://profiles.wordpress.org/<?=$authorName;?>/"><?=$authorName;?></a> (<?=$authorPercent;?>%)
+                                    </span>
+                                <?php endforeach;?>
+                                </b>
+                            </li>
+                        <?php endif;?>
+                    </ul>
+                </div>
+                <div class="col col-sm-6">
+                    <div class="col col-sm-4">
+                        <h2>Code review</h2>
+                        <span data-role="radial" 
+                            data-radial-hue="<?=$getHue($ratingValue)?>" 
+                            data-radial-value="<?=$ratingValue;?>" 
+                            data-radial-max="100" 
+                            data-radial-text="<?=$ratingValue?>%">
+                            <b><?=$ratingCount?></b> tests
+                        </span>
+                    </div>
+                    <div class="col col-sm-4">
+                        <h2>User reviews</h2>
+                        <span data-role="radial" 
+                            data-radial-hue="<?=$getHue($pluginStats[Cache_Fetch::STAT_RATING_VALUE] * 20)?>" 
+                            data-radial-value="<?=$pluginStats[Cache_Fetch::STAT_RATING_VALUE];?>" 
+                            data-radial-max="5" 
+                            data-radial-text="<?=round($pluginStats[Cache_Fetch::STAT_RATING_VALUE], 1)?>&#x2b50;">
+                            <b><?=$pluginStats[Cache_Fetch::STAT_RATING_COUNT]?></b> <?=(1 == $pluginStats[Cache_Fetch::STAT_RATING_COUNT] ? 'review' : 'reviews')?>
+                        </span>
+                    </div>
+                    <div class="col col-sm-4">
+                        <h2>Install metrics</h2>
+                        <span data-role="radial" 
+                            data-radial-value="<?=$pluginStats[Cache_Fetch::STAT_DOWN_ACTIVE];?>" 
+                            data-radial-max="<?=$pluginStats[Cache_Fetch::STAT_DOWN_TOTAL];?>" 
+                            data-radial-text="<?=round(100 * $pluginStats[Cache_Fetch::STAT_DOWN_ACTIVE] / $pluginStats[Cache_Fetch::STAT_DOWN_TOTAL], 2);?>%">
+                            <b><?=number_format($pluginStats[Cache_Fetch::STAT_DOWN_ACTIVE])?>+</b> active / 
+                            <b><?=number_format($pluginStats[Cache_Fetch::STAT_DOWN_TOTAL])?></b> total downloads
+                        </span>
+                    </div>
+                    <div class="col">
+                        <a class="btn" href="<?=$pluginStats[Cache_Fetch::STAT_DOWN_URL];?>" rel="noreferrer nofollow">
+                            Download <?php if (strlen($archiveSize)):?>(<?=$archiveSize;?>)<?php endif;?>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <main>
+            <div class="container">
+                <div class="col">
+                    <div data-role="commits" data-commits="<?=str_replace('"', '', json_encode($pluginCommits[Cache_Fetch::COMMIT_DATES]))?>"></div>
+                </div>
+            </div>
+            <div class="container article">
+                <div class="col">
+                    <?php foreach (Seo::CATEGORIES as $classPrefix => $category):?>
+                        <div class="category">
+                            <h2><?=$category;?></h2>
+                            <?php 
+                                foreach($resLayoutTests as $className => $widget) {
+                                    if (0 !== strpos($className, $classPrefix)) {
+                                        continue;
+                                    }
+                                    echo $widget;
+                                }
+                            ?>
+                        </div>
+                    <?php endforeach;?>
+                </div>
+                <div class="col col-side"><aside></aside></div>
+            </div>
+            <div class="container"><nav></nav></div>
+            <div data-role="delim">
+                <svg fill="#ffffff" xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="0" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0 100 C40 0 60 0 100 100 Z"></path></svg>
+            </div>
+        </main>
+        <footer>
+            <div class="container">
+                &copy; <?=date('Y')?>
+                <a target="_blank" rel="noreferrer nofollow" href="https://translate.google.com/?sl=ro&amp;text=potrivit">potrivit</a>
+                by <a target="_blank" rel="noreferrer nofollow author" href="https://github.com/markjivko/wordpress-code-review">Mark Jivko</a> <a href="/privacy-policy/">Privacy Policy</a>
+            </div>
+        </footer>
+    </body>
+</html>

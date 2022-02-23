@@ -1,0 +1,10 @@
+<?php
+    /* @var $data Cache_Data */
+    list($ratingTotal, $ratingCount) = $data->getRating();
+?>
+<a class="card" href="https://<?= Config::get()->domainLive()?>/<?=Render_Listing::FOLDER_PLUGIN?>/<?=$data->getSlug()?>/" title="Code review of <?= htmlentities('<' . $data->getInfo()[Test_1_About::DATA_PLUGIN_NAME] . '>');?>">
+    <span><b><?=$data->getInfo()[Test_1_About::DATA_PLUGIN_NAME];?></b></span>
+    <b>v.<?=$data->getInfo()[Test_1_About::DATA_PLUGIN_VERSION];?><?php if (count($data->getAuthors())):?> by <i><?=implode('</i>, <i>', $data->getAuthors());?></i><?php endif;?></b>
+    <i> <b><span style="left:<?=$ratingTotal;?>%;"><i><?=$ratingTotal;?>%</i></span></b> rating from <?=$ratingCount;?> tests</i>
+    <br/>
+</a>

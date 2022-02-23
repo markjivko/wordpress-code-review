@@ -1,0 +1,115 @@
+<!doctype html>
+<html data-page="home" lang="en" dir="ltr">
+    <head>
+        <meta charset="UTF-8"/>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+        <title>Potrivit - WordPress Code Reviews</title>
+        <?php if (strlen(Config::get()->googleAnalytics())):?><script async src="https://www.googletagmanager.com/gtag/js?id=<?=Config::get()->googleAnalytics()?>"></script><?php endif;?>
+        
+        <script>
+            ((path, host) => {
+                do {
+                    if ('potrivit.gitlab.io' === host) {
+                        window.location.href = `https://<?=Config::get()->domainLive()?>/${path.replace(/(?:^\/potrivit\/|\bindex.html$)/ig,'')}`;
+                        break;
+                    } else {
+                        if ('www.<?=Config::get()->domainLive()?>' === host || path.match(/\/index.html$/ig)) {
+                            window.location.href = `https://<?=Config::get()->domainLive()?>${path.replace(/\bindex.html$/ig,'')}`;
+                            break;
+                        }
+                    }
+                } while(false);
+            })(window.location.pathname, window.location.hostname);
+            <?php if (strlen(Config::get()->googleAnalytics())):?>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', '<?=Config::get()->googleAnalytics()?>');<?php endif;?>
+        </script>
+        <script defer src="./<?=Render_Listing::FOLDER_MAIN?>/js/main.js"></script>
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link rel="stylesheet" href="./<?=Render_Listing::FOLDER_MAIN?>/css/main.css"/>
+        <link rel="dns-prefetch" href="//ps.w.org"/>
+        <link rel="manifest" id="pwa_manifest"/>
+        <link rel="canonical" href="https://<?=Config::get()->domainLive()?>/"/>
+        <link rel="shortcut icon" type="image/ico" href="./favicon.ico"/>
+        <link rel="apple-touch-icon" href="./<?=Render_Listing::FOLDER_MAIN?>/img/512.png"/>
+        <link rel="license" href="<?=Config::get()->licenseUri()?>"/>
+        
+        <meta name="generator" content="<?=Config::get()->siteName();?> SSG v.<?=Config::get()->version()?> | markjivko.com"/>
+        <meta name="author" content="markjivko.com"/>
+        <meta name="referrer" content="origin"/>
+        <meta name="referrer" content="origin-when-crossorigin"/>
+        <meta name="referrer" content="origin-when-cross-origin"/>
+        <meta name="description" content="Automated software quality assurance tests and code reviews for <?=count(Cache_Search::getAll())?> public WordPress plugins"/>
+        <meta name="theme-color" content="#13d213"/>
+        <meta name="msapplication-TileColor" content="#13d213"/>
+        <meta name="apple-mobile-web-app-capable" content="yes"/>
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width"/>
+        <meta property="og:title" content="Potrivit - WordPress Code Reviews"/>
+        <meta property="og:url" content="https://<?=Config::get()->domainLive()?>/"/>
+        <meta property="og:site_name" content="<?=Config::get()->siteName();?>"/>
+        <meta property="og:description" content="Automated software quality assurance tests and code reviews for <?=count(Cache_Search::getAll())?> public WordPress plugins"/>
+        <meta property="og:type" content="website"/>
+        <meta property="og:image" content="https://<?=Config::get()->domainLive()?>/<?=Render_Listing::FOLDER_MAIN?>/img/512.png"/>
+    </head>
+    <body>
+        <header>
+            <div class="container">
+                <div class="col part-top">
+                    <a class="icon" href="https://<?= Config::get()->domainLive()?>/">Potrivit</a>
+                </div>
+                <div class="col part-cta">
+                    <h1>WordPress Code Reviews</h1>
+                    <h2><span data-role="total"><?=count(Cache_Search::getAll())?></span> WordPress plugins tested</h2>
+                    <div class="col col-md-6">
+                        <div data-role="search"></div>
+                    </div>
+                </div>
+            </div>
+            <div data-role="delim">
+                <svg width="1440" fill="#ffffff" height="0" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" viewBox="0 0 1440 150"><path d="M 0 26.1978 C 275.76 83.8152 430.707 65.0509 716.279 25.6386 C 930.422 -3.86123 1210.32 -3.98357 1439 9.18045 C 2072.34 45.9691 2201.93 62.4429 2560 26.198 V 172.199 L 0 172.199 V 26.1978 Z"></path></svg>
+            </div>
+        </header>
+        <main>
+            <div class="container">
+                <h3>Recent plugin tests</h3>
+                <?php foreach (Cache_Search::getRecent(12) as $cacheData):?>
+                    <div class="col col-sm-6 col-md-4 col-lg-3"><?=$cacheData->renderWidget()?></div>
+                <?php endforeach;?>
+            </div>
+            <div class="container">
+                <h3>Lowest scores</h3>
+                <?php foreach (Cache_Search::getGroup(Cache_Search::ORDER_RATING, 12) as $cacheData):?>
+                    <div class="col col-sm-6 col-md-4 col-lg-3"><?=$cacheData->renderWidget()?></div>
+                <?php endforeach;?>
+            </div>
+            <div class="container">
+                <h3>Highest scores</h3>
+                <?php foreach (Cache_Search::getGroup(Cache_Search::ORDER_RATING, 12, false) as $cacheData):?>
+                    <div class="col col-sm-6 col-md-4 col-lg-3"><?=$cacheData->renderWidget()?></div>
+                <?php endforeach;?>
+            </div>
+            <div class="container">
+                <h3>Largest archives</h3>
+                <?php foreach (Cache_Search::getGroup(Cache_Search::ORDER_SIZE, 12, false) as $cacheData):?>
+                    <div class="col col-sm-6 col-md-4 col-lg-3"><?=$cacheData->renderWidget()?></div>
+                <?php endforeach;?>
+            </div>
+            <div class="container">
+                <h3>Most active users</h3>
+                <?php foreach (Cache_Search::getGroup(Cache_Search::ORDER_ACTIVE, 12, false) as $cacheData):?>
+                    <div class="col col-sm-6 col-md-4 col-lg-3"><?=$cacheData->renderWidget()?></div>
+                <?php endforeach;?>
+            </div>
+            <div data-role="delim">
+                <svg fill="#ffffff" xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="0" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0 100 C40 0 60 0 100 100 Z"></path></svg>
+            </div>
+        </main>
+        <footer>
+            <div class="container">
+                &copy; <?=date('Y')?>
+                <a target="_blank" rel="noreferrer nofollow" href="https://translate.google.com/?sl=ro&amp;text=potrivit">potrivit</a>
+                by <a target="_blank" rel="noreferrer nofollow author" href="https://markjivko.com">Mark Jivko</a> <a href="/privacy-policy/">Privacy Policy</a>
+            </div>
+        </footer>
+    </body>
+</html>
