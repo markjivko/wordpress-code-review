@@ -1,7 +1,7 @@
 # WordPress Code Review
 
 <p align="center">
-    <a href="">
+    <a href="https://potrivit.com">
         <img src="https://repository-images.githubusercontent.com/462785554/e220a4a9-a4a6-4efc-aede-7e7b5a171a26"/>
     </a>
 </p>
