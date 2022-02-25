@@ -2,7 +2,7 @@
 
 <p align="center">
     <a href="https://potrivit.com">
-        <img src="https://repository-images.githubusercontent.com/462785554/e220a4a9-a4a6-4efc-aede-7e7b5a171a26"/>
+        <img src="https://repository-images.githubusercontent.com/462785554/0649e40d-fd0e-481b-ab2e-86a4a66003c8"/>
     </a>
 </p>
 
