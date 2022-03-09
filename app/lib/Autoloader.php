@@ -7,7 +7,7 @@ require_once ROOT . '/vendor/composer/autoload_real.php';
  * Potrivit - Autoloader
  * 
  * @copyright  (c) 2021, Mark Jivko
- * @author     Mark Jivko <stephino.team@gmail.com> 
+ * @author     https://markjivko.com 
  * @package    Potrivit
  */
 class Autoloader {

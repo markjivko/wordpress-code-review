@@ -3,7 +3,7 @@
  * Potrivit - CLI Entry Point
  * 
  * @copyright  (c) 2021, Mark Jivko
- * @author     Mark Jivko <stephino.team@gmail.com> 
+ * @author     https://markjivko.com 
  * @package    Potrivit
  */
 define('ROOT', __DIR__ . '/app');

@@ -4,7 +4,7 @@
  * Potrivit - Install CLI methods
  * 
  * @copyright  (c) 2021, Mark Jivko
- * @author     Mark Jivko <stephino.team@gmail.com> 
+ * @author     https://markjivko.com 
  * @package    Potrivit
  */
 class Run_Install {
@@ -287,7 +287,7 @@ COM;
         passthru('rm -rf /var/www/wordpress/.git');
         passthru('rm -rf /var/www/wordpress/wp-content/plugins/akismet');
         passthru('git init -q /var/www/wordpress');
-        passthru('git -C /var/www/wordpress config --local user.email "stephino.team@gmail.com"');
+        passthru('git -C /var/www/wordpress config --local user.email "user@example.com"');
         passthru('git -C /var/www/wordpress config --local user.name "Mark Jivko"');
         passthru('git -C /var/www/wordpress add -A');
         passthru('git -C /var/www/wordpress commit -q -m "first"');
