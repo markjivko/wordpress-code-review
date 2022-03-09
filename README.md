@@ -65,3 +65,4 @@ Batch:
  * Test newly added plugins: ```wp batch new [{limit}]```
  * Test updated plugins:     ```wp batch updates [{limit}]```
  * Re-test local plugins:    ```wp batch local [{limit}]```
+
